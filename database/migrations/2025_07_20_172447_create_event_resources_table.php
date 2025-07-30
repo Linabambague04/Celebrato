@@ -11,13 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('event_resources', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('event_id');
             $table->string('name', 100);
-            $table->string('email', 100)->unique();
-            $table->string('password', 255);
-            $table->timestamp('registration_date')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->boolean('status')->default(true);
+            $table->string('type', 50)->nullable();
+            $table->integer('quantity');
+            $table->foreign('event_id')
+                ->references('id')
+                ->on('events')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->timestamps();
         });
     }
@@ -27,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('event_resources');
     }
 };
